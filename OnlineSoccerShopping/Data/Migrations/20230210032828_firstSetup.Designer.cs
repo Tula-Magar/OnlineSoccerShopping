@@ -12,7 +12,7 @@ using OnlineSoccerShopping.Data;
 namespace OnlineSoccerShopping.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230210023235_firstSetup")]
+    [Migration("20230210032828_firstSetup")]
     partial class firstSetup
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
