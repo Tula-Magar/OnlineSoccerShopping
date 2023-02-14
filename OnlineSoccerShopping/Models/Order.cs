@@ -15,7 +15,7 @@ namespace OnlineSoccerShopping.Models
         public virtual User User { get; set; }
 
         [Required(ErrorMessage = "Please enter an order date")]
-        public DateTime OrderDate { get; set; }
+        public DateTime OrderDate { get; set; } = DateTime.Now;
 
         [Column(TypeName = "decimal(18,2)")]
         [Required(ErrorMessage = "Please enter an order total")]

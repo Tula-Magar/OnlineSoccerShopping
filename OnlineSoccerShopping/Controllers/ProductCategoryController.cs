@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualBasic;
 using OnlineSoccerShopping.Data;
 using OnlineSoccerShopping.Models;
 
@@ -8,63 +7,61 @@ using OnlineSoccerShopping.Models;
 
 namespace OnlineSoccerShopping.Controllers
 {
-    [Route("api/product")]
+    [Route("api/productcategory")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductCategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductCategoryController(ApplicationDbContext context)
         {
             _context = context;
         }
 
         // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public async Task<ActionResult<IEnumerable<ProductCategory>>> Get()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.ProductCategories.ToListAsync();
         }
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Product>> Get(int id)
+        public async Task<ActionResult<ProductCategory>> Get(int id)
 
         {
-            var product = await _context.Products.
-                Include(Category => Category.Category).
-                FirstOrDefaultAsync(p => p.ProductId == id);
+            var Category = await _context.ProductCategories.FirstOrDefaultAsync(p => p.CategoryId == id);
 
-            if (product == null)
+            if (Category == null)
             {
                 return NotFound();
             }
 
-            return product;
+            return Category;
         }
-        
+
 
         // POST api/<ProductsController>
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct( Product product) 
+        public async Task<ActionResult<ProductCategory>> PostProduct(ProductCategory productCategory)
         {
             try
             {
-               if (ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
-                    _context.Products.Add(product);
+                    _context.ProductCategories.Add(productCategory);
                     await _context.SaveChangesAsync();
-                    
+
                 }
                 else
                 {
-                    return Ok(new { isSuccess = false, data = product});
+                    return Ok(new { isSuccess = false, data = productCategory });
                 }
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return Ok(new { isSuccess = false, data = product });
+                return Ok(new { isSuccess = false, data = productCategory });
             }
 
             return RedirectToAction(nameof(Get));
@@ -72,14 +69,14 @@ namespace OnlineSoccerShopping.Controllers
 
         // PUT api/<ProductsController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> UpdateProduct(int id, [FromBody] Product product)
+        public async Task<ActionResult<ProductCategory>> UpdateProduct(int id, [FromBody] ProductCategory productCategory)
         {
-            if(id != product.ProductId)
-            { 
-                return NotFound(); 
+            if (id != productCategory.CategoryId)
+            {
+                return NotFound();
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Entry(productCategory).State = EntityState.Modified;
 
             try
             {
@@ -88,7 +85,7 @@ namespace OnlineSoccerShopping.Controllers
             catch (DbUpdateConcurrencyException)
             {
 
-               if(!ProductExist(id))
+                if (!productCategoryExist(id))
                 {
                     return NotFound();
                 }
@@ -104,26 +101,25 @@ namespace OnlineSoccerShopping.Controllers
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Product>> DeleteProduct(int id)
+        public async Task<ActionResult<ProductCategory>> DeleteProduct(int id)
         {
-            var FindProduct = await _context.Products.FindAsync(id);
+            var FindProductCategory = await _context.Products.FindAsync(id);
 
-            if(FindProduct != null)
+            if (FindProductCategory != null)
             {
-                _context.Products.Remove(FindProduct);
+                _context.Products.Remove(FindProductCategory);
                 await _context.SaveChangesAsync();
             }
             else
             {
                 return NotFound();
             }
-
             return RedirectToAction(nameof(Get));
         }
 
-        public bool ProductExist(int id)
+        public bool productCategoryExist(int id)
         {
-            return _context.Products.Any(e => e.ProductId == id);
+            return _context.ProductCategories.Any(e => e.CategoryId == id);
         }
     }
 }
