@@ -20,12 +20,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
-    policy  =>
+    policy =>
     {
-        policy.WithOrigins( "https://localhost:44439");
+        policy.WithOrigins("https://localhost:44439", "https://localhost:7217")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
+builder.Services.AddLogging(logging =>
+{
+    logging.ClearProviders();
+    logging.AddConsole();
+});
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useProductCategories from "../CustomHook/useProductCategories";
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
@@ -8,20 +9,11 @@ const CreateProduct = () => {
     Description: "",
     Price: 0,
     ImageUrl: "",
+    CategoryId: 0,
   });
-  const [categories, setCategories] = useState([]);
-  const navigate = useNavigate();
 
-  React.useEffect(() => {
-    axios
-      .get("https://localhost:7217/api/productcategory")
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, []);
+  const categories = useProductCategories();
+  const navigate = useNavigate();
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -30,28 +22,29 @@ const CreateProduct = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    console.log("Product:", product);
     axios
-      .post("/api/product", product)
+      .post("https://localhost:7217/api/product", product)
       .then((res) => {
         navigate("/");
       })
       .catch((err) => {
         console.error(err);
+        console.log("Error response data:", err.response.data);
       });
   };
-  console.log(categories);
 
   return (
     <>
-      <div className="bg-light-blue">
-      <h1>Create Product</h1>
-      <form onSubmit={handleSubmit} className="row gy-2 gx-3 align-items-center">
-        <div className="col-12">
+      <div className="mt-5">
+      <h1 className="mb-4 text-primary">Create Product</h1>
+      <form onSubmit={handleSubmit} method="post" className="row gy-2 gx-1 align-items-center">
+        <div className="form-group col-12">
           <label htmlFor="Name">Name:</label>
           <input
             type="text"
             id="name"
-            name="name"
+            name="Name"
             className="form-control"
             placeholder="Enter a product name"
             value={product.Name}
@@ -59,36 +52,46 @@ const CreateProduct = () => {
           />
         </div>
         
-        <div className="col-4">
+        {/* <div className="col-4">
           <label htmlFor="Price">Price:</label>
           <input
             type="number"
-            id="price"
-            name="price"
+            id="name"
+            name="name"
             className="form-control"
             placeholder="Enter a product price"
             value={product.Price}
             onChange={handleInputChange}
           />
+        </div> */}
+        <div className="form-group col-4">
+          <label htmlFor="price">Price:</label>
+          <div className="input-group">
+            <span className="input-group-text">$</span>
+            <input type="number" className="form-control" id="price" name="Price" placeholder="0.00" step="1.00" min="100.00" value={product.Price}
+            onChange={handleInputChange} required/>
+          </div>
         </div>
-        <div className="col-4">
+
+        <div className="form-group col-4">
           <label htmlFor="ImageUrl">ImageUrl:</label>
           <input
             type="text"
             id="imageurl"
-            name="imageurl"
+            name="ImageUrl"
             className="form-control"
             value={product.ImageUrl}
             onChange={handleInputChange}
           />
         </div>
-        <div className="col-4">
-          <label htmlFor="Category">Select Category</label>
+       
+          <div className="form-group col-4">
+          <lable htmlFor="category">Category:</lable>
           <select
             id="category"
-            name="Category"
+            name="CategoryId"
             className="form-control"
-            value={product.Category}
+            value={product.CategoryId}
             onChange={handleInputChange}
           >
             <option value="">Select a category</option>
@@ -98,13 +101,14 @@ const CreateProduct = () => {
               </option>
             ))}
           </select>
+
         </div>
-        <div className="col-12">
+        <div className="form-group col-12">
           <label htmlFor="Description">Description:</label>
           <textarea
             type="text"
             id="description"
-            name="description"
+            name="Description"
             className="form-control"
             rows="4" 
             cols="50"

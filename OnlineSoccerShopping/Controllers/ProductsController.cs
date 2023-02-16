@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
 using OnlineSoccerShopping.Data;
 using OnlineSoccerShopping.Models;
+using Microsoft.Extensions.Logging;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Controller;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,10 +15,12 @@ namespace OnlineSoccerShopping.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
             _context = context;
+            _logger = loggerFactory.CreateLogger<ProductsController>();
         }
 
         // GET: api/<ProductsController>
@@ -48,24 +52,8 @@ namespace OnlineSoccerShopping.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct( Product product) 
         {
-            try
-            {
-               if (ModelState.IsValid)
-                {
-                    _context.Products.Add(product);
-                    await _context.SaveChangesAsync();
-                    
-                }
-                else
-                {
-                    return Ok(new { isSuccess = false, data = product});
-                }
-            }
-
-            catch(Exception ex)
-            {
-                return Ok(new { isSuccess = false, data = product });
-            }
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Get));
         }
