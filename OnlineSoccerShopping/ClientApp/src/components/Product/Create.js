@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useProductCategories from "../CustomHook/useProductCategories";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
@@ -11,7 +12,7 @@ const CreateProduct = () => {
     ImageUrl: "",
     CategoryId: 0,
   });
-
+  const [isSuccess, setIsSuccess] = useState(false);
   const categories = useProductCategories();
   const navigate = useNavigate();
 
@@ -26,18 +27,34 @@ const CreateProduct = () => {
     axios
       .post("https://localhost:7217/api/product", product)
       .then((res) => {
-        navigate("/");
+       
+        setIsSuccess(true);
+        setTimeout(() => {
+          setIsSuccess(false);
+          navigate("/");
+        }, 5000);
       })
       .catch((err) => {
         console.error(err);
         console.log("Error response data:", err.response.data);
       });
   };
+  
 
   return (
     <>
       <div className="mt-5">
       <h1 className="mb-4 text-primary">Create Product</h1>
+      {isSuccess ? (
+    <div className="alert alert-success" role="alert">
+      <i className="bi bi-check-circle-fill"></i> Product created successfully!
+    </div>
+  ) : (
+    <div className="alert alert-success hide" role="alert">
+      Product created successfully!
+    </div>
+  )}
+
       <form onSubmit={handleSubmit} method="post" className="row gy-2 gx-1 align-items-center">
         <div className="form-group col-12">
           <label htmlFor="Name">Name:</label>
@@ -86,7 +103,7 @@ const CreateProduct = () => {
         </div>
        
           <div className="form-group col-4">
-          <lable htmlFor="category">Category:</lable>
+          <label htmlFor="category">Category:</label>
           <select
             id="category"
             name="CategoryId"

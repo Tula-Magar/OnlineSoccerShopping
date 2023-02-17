@@ -20,3 +20,14 @@ html {
 .nav{
   background-color: #3472af;
 }
+.alert-success {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+}
+
+.alert-success.hide {
+  opacity: 0;
+}
