@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using OnlineSoccerShopping.Azure;
 using OnlineSoccerShopping.Data;
 using OnlineSoccerShopping.Models;
 
@@ -28,11 +33,11 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddLogging(logging =>
-{
-    logging.ClearProviders();
-    logging.AddConsole();
-});
+// Read Azure Storage configuration from appsettings.json
+var azureStorageConnectionString = builder.Configuration.GetConnectionString("AzureStorageConnectionString");
+var azureStorageContainerName = builder.Configuration["AzureStorageContainerName"];
+
+builder.Services.AddSingleton<IAzureStorage>(provider => new AzureStorage(azureStorageConnectionString, azureStorageContainerName));
 
 builder.Services.AddIdentityServer()
     .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
@@ -48,11 +53,12 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseMigrationsEndPoint();
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Error");
     app.UseHsts();
 }
 
@@ -70,7 +76,6 @@ app.MapControllerRoute(
     pattern: "{controller}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.MapFallbackToFile("index.html"); ;
-
+app.MapFallbackToFile("index.html");
 
 app.Run();

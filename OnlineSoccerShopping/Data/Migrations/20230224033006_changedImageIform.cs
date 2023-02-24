@@ -4,7 +4,7 @@
 
 namespace OnlineSoccerShopping.Data.Migrations
 {
-    public partial class AddedDefaultDateInOrder : Migration
+    public partial class changedImageIform : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

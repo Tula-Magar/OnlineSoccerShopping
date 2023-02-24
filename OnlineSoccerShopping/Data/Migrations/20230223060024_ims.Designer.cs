@@ -12,8 +12,8 @@ using OnlineSoccerShopping.Data;
 namespace OnlineSoccerShopping.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230214042317_AddedDefaultDateInOrder")]
-    partial class AddedDefaultDateInOrder
+    [Migration("20230223060024_ims")]
+    partial class ims
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -438,8 +438,7 @@ namespace OnlineSoccerShopping.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
+                    b.Property<string>("ImageUrlName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

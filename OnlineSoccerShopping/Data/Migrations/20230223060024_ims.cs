@@ -5,10 +5,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OnlineSoccerShopping.Data.Migrations
 {
-    public partial class firstSetup : Migration
+    public partial class ims : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+           
+
+           
+      
+            
+ 
+           
             migrationBuilder.CreateTable(
                 name: "ProductCategories",
                 columns: table => new
@@ -42,6 +49,7 @@ namespace OnlineSoccerShopping.Data.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
                 });
+ 
 
             migrationBuilder.CreateTable(
                 name: "Products",
@@ -52,7 +60,7 @@ namespace OnlineSoccerShopping.Data.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrlName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CategoryId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -122,10 +130,10 @@ namespace OnlineSoccerShopping.Data.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_PersistedGrants_ConsumedTime",
-                table: "PersistedGrants",
-                column: "ConsumedTime");
+ 
+
+ 
+ 
 
             migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_ProductId",
@@ -142,6 +150,11 @@ namespace OnlineSoccerShopping.Data.Migrations
                 table: "Orders",
                 column: "UserId");
 
+ 
+
+ 
+ 
+
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
@@ -150,8 +163,14 @@ namespace OnlineSoccerShopping.Data.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+ 
+     
+
             migrationBuilder.DropTable(
                 name: "OrderItems");
+
+         
+ 
 
             migrationBuilder.DropTable(
                 name: "Orders");
@@ -164,10 +183,6 @@ namespace OnlineSoccerShopping.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");
-
-            migrationBuilder.DropIndex(
-                name: "IX_PersistedGrants_ConsumedTime",
-                table: "PersistedGrants");
         }
     }
 }

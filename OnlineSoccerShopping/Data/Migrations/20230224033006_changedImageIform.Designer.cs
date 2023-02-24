@@ -12,14 +12,14 @@ using OnlineSoccerShopping.Data;
 namespace OnlineSoccerShopping.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230210032828_firstSetup")]
-    partial class firstSetup
+    [Migration("20230224033006_changedImageIform")]
+    partial class changedImageIform
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.11")
+                .HasAnnotation("ProductVersion", "6.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -438,8 +438,7 @@ namespace OnlineSoccerShopping.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
+                    b.Property<string>("ImageUrlName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
