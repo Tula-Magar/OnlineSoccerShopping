@@ -4,6 +4,8 @@ using OnlineSoccerShopping.Data;
 using OnlineSoccerShopping.Models;
 using OnlineSoccerShopping.Models.ViewModels;
 using OnlineSoccerShopping.Azure;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -22,12 +24,37 @@ namespace OnlineSoccerShopping.Controllers
             _azureStorage = azureStorage;
         }
 
+
         // GET: api/<ProductsController>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> Get()
+        public async Task<ActionResult<IEnumerable<object>>> Get()
         {
-            return await _context.Products.ToListAsync();
+            var products = await _context.Products.Include(c => c.Category).ToListAsync();
+
+            var result = products.Select(async p => new {
+                p.ProductId,
+                p.Name,
+                p.Description,
+                p.Price,
+                ImageUrl = string.IsNullOrEmpty(p.ImageUrlName) ? null : await _azureStorage.GetImageAsync(p.ImageUrlName),
+                Category = new
+                {
+                    p.Category.CategoryId,
+                    p.Category.Name
+                }
+            });
+
+            var productsWithImages = await Task.WhenAll(result);
+
+            return Ok(productsWithImages);
         }
+
+
+
+
+
+
+
 
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
@@ -86,7 +113,7 @@ namespace OnlineSoccerShopping.Controllers
             _context.Products.Add(ob);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Get));
+            return CreatedAtAction(nameof(Get), new { id = ob.ProductId }, ob);
         }
          
         // PUT api/<ProductsController>/5

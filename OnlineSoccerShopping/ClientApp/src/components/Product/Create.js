@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import useProductCategories from "../CustomHook/useProductCategories";
-import "bootstrap-icons/font/bootstrap-icons.css";
+import GetProduct from "./GetProduct";
 
 const CreateProduct = () => {
   const [product, setProduct] = useState({
@@ -122,7 +122,7 @@ const CreateProduct = () => {
               onChange={handleInputChange}
             >
               <option value="">Select a category</option>
-              {categories.map((category) => (
+              {categories.map((category, Index) => (
                 <option key={category.categoryId} value={category.categoryId}>
                   {category.name}
                 </option>
@@ -148,6 +148,8 @@ const CreateProduct = () => {
           </button>
         </form>
       </div>
+
+      <GetProduct />
     </>
   );
 };

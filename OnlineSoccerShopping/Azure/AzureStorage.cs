@@ -1,5 +1,6 @@
 ﻿using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
@@ -7,18 +8,17 @@ using System.Threading.Tasks;
 
 namespace OnlineSoccerShopping.Azure
 {
-    public class AzureStorage: IAzureStorage
+    public class AzureStorage : IAzureStorage
     {
         private readonly string _connectionString;
         private readonly string _containerName;
- 
 
         public AzureStorage(string azureStorageConnectionString, string azureStorageContainerName)
         {
             _connectionString = azureStorageConnectionString;
             _containerName = azureStorageContainerName;
         }
- 
+
         public async Task<string> UploadFileAsync(IFormFile file)
         {
             var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
@@ -34,6 +34,23 @@ namespace OnlineSoccerShopping.Azure
 
             // Return the unique name of the file
             return fileName;
+        }
+
+        public async Task<byte[]> GetImageAsync(string fileName)
+        {
+            var blobServiceClient = new BlobServiceClient(_connectionString);
+            var containerClient = blobServiceClient.GetBlobContainerClient(_containerName);
+            var blobClient = containerClient.GetBlobClient(fileName);
+
+            if (!await blobClient.ExistsAsync())
+            {
+                throw new FileNotFoundException($"File '{fileName}' not found in Azure Blob Storage container '{_containerName}'.");
+            }
+
+            using var streamReader = new MemoryStream();
+            await blobClient.DownloadToAsync(streamReader);
+
+            return streamReader.ToArray();
         }
 
         public async Task DeleteFileAsync(string fileName)
