@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useProductCategories from "../CustomHook/useProductCategories";
+import useProductCategories from "../ProductCategory/useProductCategories";
 import GetProduct from "./GetProduct";
 
 const CreateProduct = () => {

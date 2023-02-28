@@ -3,7 +3,7 @@
     public interface IAzureStorage
     {
         Task<string> UploadFileAsync(IFormFile file);
-        Task<byte[]> GetImageAsync(string fileName);
+        Task<string> GetImageAsync(string imageName);
         Task DeleteFileAsync(string fileName);
     }
 }

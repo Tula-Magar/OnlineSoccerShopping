@@ -24,18 +24,21 @@ export default function GetProduct() {
         <Row>
           {Array.isArray(product) &&
             product.map((product) => (
-              <Col md="4" key={product.productId}>
+              <Col md={6} lg={4} xl={3} key={product.productId}>
                 <Card className="mb-4">
                   <Card>
                     <Card.Img
                       variant="top"
-                      src={`data:image/jpeg;base64,${product.imageUrl}`}
+                      src={product.imageUrl || "/placeholder-image.jpg"}
                       alt={product.imageUrlName}
                     />
+
                     <Card.Body>
                       <Card.Title>{product.name}</Card.Title>
                       <Card.Text>{product.description}</Card.Text>
-                      <Card.Text>{product.price}</Card.Text>
+                      <Card.Text className="text-success">
+                        ${product.price}
+                      </Card.Text>
                       <Card.Text>
                         {product.category.categoryId &&
                         product.category.name ? (

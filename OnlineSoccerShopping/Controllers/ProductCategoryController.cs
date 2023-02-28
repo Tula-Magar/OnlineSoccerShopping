@@ -45,26 +45,15 @@ namespace OnlineSoccerShopping.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductCategory>> PostProduct(ProductCategory productCategory)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    _context.ProductCategories.Add(productCategory);
-                    await _context.SaveChangesAsync();
-
-                }
-                else
-                {
-                    return Ok(new { isSuccess = false, data = productCategory });
-                }
+                return BadRequest(ModelState);
             }
 
-            catch (Exception ex)
-            {
-                return Ok(new { isSuccess = false, data = productCategory });
-            }
+            _context.ProductCategories.Add(productCategory);
+            await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Get));
+            return CreatedAtAction(nameof(Get ), new { id = productCategory.CategoryId }, productCategory);
         }
 
         // PUT api/<ProductsController>/5
