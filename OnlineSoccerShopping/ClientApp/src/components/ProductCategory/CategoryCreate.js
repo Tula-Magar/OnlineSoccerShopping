@@ -1,21 +1,19 @@
 import React from "react";
+import { useForm } from "react-hook-form";
 import axios from "axios";
 
 import { Button, Form } from "react-bootstrap";
 
 export default function CategoryCreate() {
-  const [category, setCategory] = React.useState({ Name: "" });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setCategory({ ...category, [name]: value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
+  const onSubmit = (data) => {
     axios
-      .post("https://localhost:7217/api/productcategory", category)
+      .post("https://localhost:7217/api/productcategory", data)
       .then((res) => {
         console.log(res);
         console.log(res.data);
@@ -28,16 +26,16 @@ export default function CategoryCreate() {
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
             name="Name"
-            value={category.Name}
-            onChange={handleInputChange}
+            {...register("Name", { required: true })}
             placeholder="Enter product category name"
           />
+          {errors.Name && <span>This field is required</span>}
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit

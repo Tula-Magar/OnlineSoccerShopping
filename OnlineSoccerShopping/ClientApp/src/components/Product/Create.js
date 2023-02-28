@@ -1,45 +1,34 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 import useProductCategories from "../ProductCategory/useProductCategories";
-import GetProduct from "./GetProduct";
 
 const CreateProduct = () => {
-  const [product, setProduct] = useState({
-    Name: "",
-    Description: "",
-    Price: 0,
-    ImageUrl: null,
-    CategoryId: 0,
-  });
-  const [isSuccess, setIsSuccess] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const categories = useProductCategories();
   const navigate = useNavigate();
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setProduct({ ...product, [name]: value });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const onSubmit = (data) => {
     const formData = new FormData();
-    formData.append("Name", product.Name);
-    formData.append("Description", product.Description);
-    formData.append("Price", product.Price);
-    formData.append("CategoryId", product.CategoryId);
-    formData.append("Image", product.ImageUrl);
-    console.log("Product:", product);
+    formData.append("Name", data.Name);
+    formData.append("Description", data.Description);
+    formData.append("Price", data.Price);
+    formData.append("CategoryId", data.CategoryId);
+    formData.append("Image", data.ImageUrl[0]);
+    console.log("Product:", data);
     axios
       .post("https://localhost:7217/api/product", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        setIsSuccess(true);
-        setTimeout(() => {
-          setIsSuccess(false);
-          navigate("/");
-        }, 5000);
+        console.log(res);
+        console.log(res.data);
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -51,19 +40,8 @@ const CreateProduct = () => {
     <>
       <div className="mt-5">
         <h1 className="mb-4 text-primary">Create Product</h1>
-        {isSuccess ? (
-          <div className="alert alert-success" role="alert">
-            <i className="bi bi-check-circle-fill"></i> Product created
-            successfully!
-          </div>
-        ) : (
-          <div className="alert alert-success" role="alert">
-            Product didn't create successfully!
-          </div>
-        )}
-
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           method="post"
           className="row gy-2 gx-1 align-items-center"
           encType="multipart/form-data"
@@ -76,9 +54,9 @@ const CreateProduct = () => {
               name="Name"
               className="form-control"
               placeholder="Enter a product name"
-              value={product.Name}
-              onChange={handleInputChange}
+              {...register("Name", { required: true })}
             />
+            {errors.Name && <span>This field is required</span>}
           </div>
 
           <div className="form-group col-4">
@@ -91,11 +69,12 @@ const CreateProduct = () => {
                 id="price"
                 name="Price"
                 placeholder="0.00"
-                value={product.Price}
-                onChange={handleInputChange}
-                required
+                {...register("Price", { required: true, min: 0 })}
               />
             </div>
+            {errors.Price && (
+              <span>This field is required and must be greater than 0</span>
+            )}
           </div>
 
           <div className="form-group col-4">
@@ -106,10 +85,9 @@ const CreateProduct = () => {
               name="image"
               accept=".jpg, .jpeg, .png"
               className="form-control"
-              onChange={(e) =>
-                setProduct({ ...product, ImageUrl: e.target.files[0] })
-              }
+              {...register("ImageUrl", { required: true })}
             />
+            {errors.ImageUrl && <span>This field is required</span>}
           </div>
 
           <div className="form-group col-4">
@@ -118,8 +96,7 @@ const CreateProduct = () => {
               id="category"
               name="CategoryId"
               className="form-control"
-              value={product.CategoryId}
-              onChange={handleInputChange}
+              {...register("CategoryId", { required: true })}
             >
               <option value="">Select a category</option>
               {categories.map((category, Index) => (
@@ -128,28 +105,28 @@ const CreateProduct = () => {
                 </option>
               ))}
             </select>
+            {errors.CategoryId && <span>Product category is required</span>}
           </div>
+
           <div className="form-group col-12">
             <label htmlFor="Description">Description:</label>
             <textarea
-              type="text"
               id="description"
               name="Description"
               className="form-control"
               rows="4"
               cols="50"
               placeholder="Enter a product description"
-              value={product.Description}
-              onChange={handleInputChange}
+              {...register("Description", { required: true })}
             />
+            {errors.Description && <span>Product description is required</span>}
           </div>
+
           <button type="submit" className="col-2 btn btn-primary">
-            Create
+            Submit
           </button>
         </form>
       </div>
-
-      <GetProduct />
     </>
   );
 };
