@@ -1,24 +1,34 @@
 import React, { Component } from "react";
 import { Route, Routes } from "react-router-dom";
-import AppRoutes from "./AppRoutes";
-import Layout from "./components/Layout";
 
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./custom.css";
+
+import NavMenu from "./components/NavMenu";
+
+import Home from "./components/Home";
+
+import GetProduct from "./components/Product/GetProduct";
+import ProductDetails from "./components/Product/ProductDetails";
+import Create from "./components/Product/Create";
+
+import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 
 export default class App extends Component {
   static displayName = App.name;
 
   render() {
     return (
-      <Layout>
+      <div>
+        <NavMenu />
         <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, ...rest } = route;
-            return <Route key={index} {...rest} element={element} />;
-          })}
+          <Route path="/" element={<Home />} />
+          <Route path="/products/:productId" element={<ProductDetails />} />
+          <Route path="/products" element={<GetProduct />} />
+          <Route path="/Create" element={<Create />} />
+          <Route path="/CategoryCreate" element={<CategoryCreate />} />
         </Routes>
-      </Layout>
+      </div>
     );
   }
 }

@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useProductCategories from "../ProductCategory/useProductCategories";
-
+import { Container, Row, Col, Button, Form } from "react-bootstrap";
 const CreateProduct = () => {
   const {
     register,
@@ -83,7 +83,7 @@ const CreateProduct = () => {
               type="file"
               id="image"
               name="image"
-              accept=".jpg, .jpeg, .png"
+              accept=".jpg, .jpeg, .png .jfif .gif .bmp .svg .webp .tiff .psd .raw"
               className="form-control"
               {...register("ImageUrl", { required: true })}
             />

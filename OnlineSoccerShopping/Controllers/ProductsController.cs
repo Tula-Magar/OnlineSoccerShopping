@@ -59,20 +59,23 @@ namespace OnlineSoccerShopping.Controllers
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> Get(int id)
-
         {
-            var product = await _context.Products.
-                Include(Category => Category.Category).
-                FirstOrDefaultAsync(p => p.ProductId == id);
+            var product = await _context.Products
+                .Include(c => c.Category)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
 
             if (product == null)
             {
                 return NotFound();
             }
 
+            product.ImageUrlName = string.IsNullOrEmpty(product.ImageUrlName) ? null : await _azureStorage.GetImageAsync(product.ImageUrlName);
+  
+
             return product;
         }
-        
+
+
 
         // POST api/<ProductsController>
         [HttpPost]
@@ -156,6 +159,7 @@ namespace OnlineSoccerShopping.Controllers
 
             if(FindProduct != null)
             {
+                await _azureStorage.DeleteFileAsync(FindProduct.ImageUrlName);
                 _context.Products.Remove(FindProduct);
                 await _context.SaveChangesAsync();
             }

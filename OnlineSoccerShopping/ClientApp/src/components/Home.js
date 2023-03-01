@@ -1,8 +1,11 @@
 import React from "react";
-import GetProduct from "./Product/GetProduct";
 
 const Home = () => {
-  return <GetProduct />;
+  return (
+    <>
+      <h1>Home</h1>
+    </>
+  );
 };
 
 Home.displayName = "Home";
