@@ -29,6 +29,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 
 
+
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,

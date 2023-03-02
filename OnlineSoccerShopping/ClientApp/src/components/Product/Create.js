@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useProductCategories from "../ProductCategory/useProductCategories";
-import { Container, Row, Col, Button, Form } from "react-bootstrap";
+
 const CreateProduct = () => {
   const {
     register,
@@ -11,6 +11,7 @@ const CreateProduct = () => {
     formState: { errors },
   } = useForm();
   const categories = useProductCategories();
+
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
@@ -83,7 +84,7 @@ const CreateProduct = () => {
               type="file"
               id="image"
               name="image"
-              accept=".jpg, .jpeg, .png .jfif .gif .bmp .svg .webp .tiff .psd .raw"
+              accept=".jpg, .jpeg, .png"
               className="form-control"
               {...register("ImageUrl", { required: true })}
             />
@@ -99,7 +100,7 @@ const CreateProduct = () => {
               {...register("CategoryId", { required: true })}
             >
               <option value="">Select a category</option>
-              {categories.map((category, Index) => (
+              {categories.map((category) => (
                 <option key={category.categoryId} value={category.categoryId}>
                   {category.name}
                 </option>

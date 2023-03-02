@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace OnlineSoccerShopping.Models
 {
@@ -25,6 +26,8 @@ namespace OnlineSoccerShopping.Models
 
         [DisplayName("Product Category")]
         public int CategoryId { get; set; }
+
+   
         public ProductCategory Category { get; set; }
     }
 }

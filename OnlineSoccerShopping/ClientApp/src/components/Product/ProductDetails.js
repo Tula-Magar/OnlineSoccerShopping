@@ -18,6 +18,8 @@ export default function ProductDetails() {
       });
   }, [productId]);
 
+  console.log(product);
+
   if (!product) {
     return <div>Loading...</div>;
   }

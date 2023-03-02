@@ -76,7 +76,10 @@ export default function GetProduct() {
 
                       <Link
                         className="btn btn-warning"
-                        to={`/product/edit/${product.productId}`}
+                        to={`/product/${product.productId}`}
+                        onClick={() =>
+                          console.log(`/products/${product.productId}`)
+                        }
                       >
                         Edit
                       </Link>
