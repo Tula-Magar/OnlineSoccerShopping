@@ -27,8 +27,6 @@ const CreateProduct = () => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
-        console.log(res);
-        console.log(res.data);
         navigate("/");
       })
       .catch((err) => {
@@ -84,7 +82,7 @@ const CreateProduct = () => {
               type="file"
               id="image"
               name="image"
-              accept=".jpg, .jpeg, .png"
+              accept=".jpg, .jpeg, .png .gif .bmp .tiff .svg .webp .jfif"
               className="form-control"
               {...register("ImageUrl", { required: true })}
             />

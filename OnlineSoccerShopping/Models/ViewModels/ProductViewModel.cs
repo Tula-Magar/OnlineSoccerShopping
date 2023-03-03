@@ -22,7 +22,7 @@ namespace OnlineSoccerShopping.Models.ViewModels
         [Range(1, int.MaxValue)]
         public int CategoryId { get; set; }
 
-        [Required]
+
         public IFormFile Image { get; set; }
     }
 

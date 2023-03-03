@@ -120,15 +120,52 @@ namespace OnlineSoccerShopping.Controllers
         }
          
         // PUT api/<ProductsController>/5
+    
         [HttpPut("{id}")]
-        public async Task<ActionResult<Product>> UpdateProduct(int id, [FromBody] Product product)
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<ProductViewModel>> UpdateProduct(int id, [FromForm] ProductViewModel productViewModel)
         {
-            if(id != product.ProductId)
-            { 
-                return NotFound(); 
+
+
+            if (productViewModel.Image == null)
+            {
+                return BadRequest("Product image is null");
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var existingProduct = await _context.Products.FindAsync(id);
+
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+
+            IFormFile file = productViewModel.Image;
+            if (file != null)
+            {
+                existingProduct.Name = productViewModel.Name;
+                existingProduct.Description = productViewModel.Description;
+                existingProduct.Price = productViewModel.Price;
+                existingProduct.CategoryId = productViewModel.CategoryId;
+ 
+
+                if (!string.IsNullOrEmpty(existingProduct.ImageUrlName))
+                {
+                    await _azureStorage.DeleteFileAsync(existingProduct.ImageUrlName);
+                }
+                existingProduct.ImageUrlName = await _azureStorage.UploadFileAsync(file);
+            }
+            else
+            {
+                existingProduct.Name = productViewModel.Name;
+                existingProduct.Description = productViewModel.Description;
+                existingProduct.Price = productViewModel.Price;
+                existingProduct.CategoryId = productViewModel.CategoryId;
+            }
 
             try
             {
@@ -136,20 +173,19 @@ namespace OnlineSoccerShopping.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-
-               if(!ProductExist(id))
+                if (!ProductExist(id))
                 {
                     return NotFound();
                 }
-
                 else
                 {
-                    return BadRequest();
+                    throw;
                 }
             }
 
-            return RedirectToAction(nameof(Get));
+            return CreatedAtAction(nameof(Get), new { id = existingProduct.ProductId }, existingProduct);
         }
+
 
         // DELETE api/<ProductsController>/5
         [HttpDelete("{id}")]
