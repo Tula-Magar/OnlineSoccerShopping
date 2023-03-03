@@ -139,26 +139,26 @@ const ProductEdit = () => {
               accept=".jpg, .jpeg, .png .gif .bmp .tiff .svg .webp .jfif"
               className="form-control"
               defaultValue={product.imageUrlName}
-              // {...register("ImageUrl", {
-              //   required: true,
-              //   onChange: (e) => {
-              //     if (
-              //       e.target.files instanceof FileList &&
-              //       e.target.files.length > 0
-              //     ) {
-              //       const file = e.target.files[0];
-              //       const reader = new FileReader();
-              //       reader.onload = (event) => {
-              //         const newImageUrl = event.target.result;
-              //         setProduct({ ...product, imageUrlName: newImageUrl });
-              //       };
-              //       reader.readAsDataURL(file);
-              //     }
-              //   },
-              // })}
+              {...register("ImageUrl", {
+                required: false,
+                onChange: (e) => {
+                  if (
+                    e.target.files instanceof FileList &&
+                    e.target.files.length > 0
+                  ) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const newImageUrl = event.target.result;
+                      setProduct({ ...product, imageUrlName: newImageUrl });
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                },
+              })}
             />
 
-            {/* {errors.ImageUrl && <span>This field is required</span>} */}
+            {errors.ImageUrl && <span>This field is required</span>}
           </div>
 
           <div className="form-group col-4">

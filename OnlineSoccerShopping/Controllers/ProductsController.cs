@@ -50,12 +50,6 @@ namespace OnlineSoccerShopping.Controllers
         }
 
 
-
-
-
-
-
-
         // GET api/<ProductsController>/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> Get(int id)
@@ -74,7 +68,6 @@ namespace OnlineSoccerShopping.Controllers
 
             return product;
         }
-
 
 
         // POST api/<ProductsController>
@@ -125,12 +118,6 @@ namespace OnlineSoccerShopping.Controllers
         [Consumes("multipart/form-data")]
         public async Task<ActionResult<ProductViewModel>> UpdateProduct(int id, [FromForm] ProductViewModel productViewModel)
         {
-
-
-            if (productViewModel.Image == null)
-            {
-                return BadRequest("Product image is null");
-            }
 
             if (!ModelState.IsValid)
             {
