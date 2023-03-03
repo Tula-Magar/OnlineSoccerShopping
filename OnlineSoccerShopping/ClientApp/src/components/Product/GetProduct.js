@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 export default function GetProduct() {
+  const [filter, setFilter] = useState("");
   const [product, setProduct] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -20,6 +21,13 @@ export default function GetProduct() {
       });
   }, []);
 
+  const filteredProducts = product.filter((product) =>
+    product.name.toLowerCase().includes(filter.toLowerCase())
+  );
+  const handleChange = (e) => {
+    setFilter(e.target.value);
+  };
+
   const handleDelete = (productId) => {
     axios
       .delete(`https://localhost:7217/api/product/${productId}`)
@@ -35,8 +43,8 @@ export default function GetProduct() {
   const memoizedProductList = useMemo(() => {
     return (
       <Row xs={1} md={2} lg={3} xl={4} className="g-4">
-        {Array.isArray(product) &&
-          product.map((product) => (
+        {Array.isArray(filteredProducts) &&
+          filteredProducts.map((product) => (
             <Col key={product.productId}>
               <Card className="h-100">
                 <Card.Img
@@ -101,12 +109,19 @@ export default function GetProduct() {
           ))}
       </Row>
     );
-  }, [product]);
+  }, [filteredProducts]);
 
   return (
     <>
       <Container className="text-dark">
         <h1 className="mb-4 text-primary">Product Details</h1>
+        <input
+          type="text"
+          placeholder="Search products by name"
+          className="form-control mb-3"
+          value={filter}
+          onChange={handleChange}
+        />
         {memoizedProductList}
       </Container>
 
