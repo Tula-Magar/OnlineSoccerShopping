@@ -15,6 +15,9 @@ import Create from "./components/Product/Create";
 
 import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 
+import Login from "./components/UserAccount/Login";
+import Register from "./components/UserAccount/Register";
+
 export default class App extends Component {
   static displayName = App.name;
 
@@ -29,6 +32,8 @@ export default class App extends Component {
           <Route path="/products" element={<GetProduct />} />
           <Route path="/Create" element={<Create />} />
           <Route path="/CategoryCreate" element={<CategoryCreate />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </div>
     );

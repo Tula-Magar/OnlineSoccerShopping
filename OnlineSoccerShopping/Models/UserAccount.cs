@@ -42,6 +42,10 @@ namespace OnlineSoccerShopping.Models
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
+   
+
+        public bool dataProtection { get; set; }
+
         public virtual ICollection<Order> Orders { get; set; }
 
         public virtual ICollection<OrderItem> OrderItems { get; set; }

@@ -12,3 +12,6 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+.shadowed {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
