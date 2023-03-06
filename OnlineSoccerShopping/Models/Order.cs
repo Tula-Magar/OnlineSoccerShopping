@@ -12,7 +12,7 @@ namespace OnlineSoccerShopping.Models
 
         [Required(ErrorMessage = "Please select a user")]
         public int UserId { get; set; }
-        public virtual User User { get; set; }
+        public virtual UserAccount User { get; set; }
 
         [Required(ErrorMessage = "Please enter an order date")]
         public DateTime OrderDate { get; set; } = DateTime.Now;

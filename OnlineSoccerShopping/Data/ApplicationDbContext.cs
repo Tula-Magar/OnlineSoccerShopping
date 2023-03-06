@@ -19,7 +19,7 @@ namespace OnlineSoccerShopping.Data
         public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<UserAccount> Users { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -52,13 +52,13 @@ namespace OnlineSoccerShopping.Data
                 .HasForeignKey(i => i.OrderId);
            
 
-            builder.Entity<User>()
+            builder.Entity<UserAccount>()
                 .HasMany(u => u.Orders)
                 .WithOne(o => o.User)
                 .HasForeignKey(o => o.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<User>()
+            builder.Entity<UserAccount>()
                 .HasMany(u => u.OrderItems)
                 .WithOne(i => i.User)
                 .HasForeignKey(i => i.UserId)
