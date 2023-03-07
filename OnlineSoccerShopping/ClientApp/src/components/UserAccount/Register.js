@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Container, Row, Col, Form, FormCheck, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function Register() {
   const [user, setUser] = useState({
@@ -18,16 +19,17 @@ export default function Register() {
     dataProtection: false, // new field for data protection agreement
   });
 
+  const navigate = useNavigate();
+
   const [validationErrors, setValidationErrors] = useState({});
 
   const handleInputChange = (event) => {
-    setUser({
-      ...user,
-      [event.target.name]:
-        event.target.type === "checkbox"
-          ? event.target.checked
-          : event.target.value,
-    });
+    const { name, value, type, checked } = event.target;
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -45,8 +47,8 @@ export default function Register() {
     }
     if (!user.password) {
       errors.password = "Password is required";
-    } else if (user.password.length < 8) {
-      errors.password = "Password must be at least 8 characters";
+    } else if (user.password.length < 6) {
+      errors.password = "Password must be at least 6 characters";
     }
     if (!user.confirmPassword) {
       errors.confirmPassword = "Confirm password is required";
@@ -78,15 +80,22 @@ export default function Register() {
         "You must agree to data protection laws and regulations";
     }
     setValidationErrors(errors);
+    console.log(errors);
+    console.log(user);
 
     // If there are no validation errors, submit the form
     if (Object.keys(errors).length === 0) {
       try {
+        // Send the user object to the server
         const response = await axios.post(
-          "https://localhost:7217//api/userAccount",
+          "https://localhost:7217/api/userAccount",
           user
         );
-        console.log(response.data);
+
+        // Redirect to the login page on success
+        if (response.status === 200) {
+          navigate("/login");
+        }
       } catch (error) {
         console.log(error);
       }
@@ -250,6 +259,8 @@ export default function Register() {
               type="checkbox"
               name="dataProtection"
               label="Data Protection"
+              checked={user.dataProtection}
+              onChange={handleInputChange}
             />
 
             <Button variant="primary" type="submit">

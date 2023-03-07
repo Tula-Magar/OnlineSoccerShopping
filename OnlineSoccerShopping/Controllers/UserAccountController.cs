@@ -27,43 +27,44 @@ namespace OnlineSoccerShopping.Controllers
         // GET: api/<UserAccountController>
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserAccount>>> Get()
+        public async Task<ActionResult<IEnumerable<object>>> Login()
         {
             return await _context.Users.ToListAsync();
         }
 
-        // GET api/<UserAccountController>/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<UserAccount>> Get(int id)
+       
+        // GET: api/userAccount/Login
+        [HttpGet("Login")]
+        public async Task<ActionResult<UserAccount>> Login(string email, string password)
         {
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == password);
             if (user == null)
             {
                 return NotFound();
             }
-            return user;
+            return Ok(user);
         }
+
 
         // POST api/<UserAccountController>
         [HttpPost]
-        public async Task<ActionResult<UserAccount>> AccountRegister([FromBody] UserAccount user)
+        [HttpPost]
+        public async Task<ActionResult<UserAccount>> AccountRegister(UserAccount user)
         {
-           if (user == null)
+            if (user == null)
             {
-                BadRequest("user must fill the all the input field");
+                return BadRequest("user must fill all input fields");
             }
 
-           if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                {
-                    return BadRequest(ModelState);
-                }
+                return BadRequest(ModelState);
             }
+
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = user.UserId }, user);
+            return CreatedAtAction(nameof(Login), new { id = user.UserId }, user);
         }
- 
 
         // PUT api/<UserAccountController>/5
         [HttpPut("{id}")]
