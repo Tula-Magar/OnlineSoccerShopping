@@ -15,7 +15,7 @@ import Create from "./components/Product/Create";
 
 import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 
-import Login from "./components/UserAccount/Login";
+import Login from "./components/UserAccount/LoginPage";
 import Register from "./components/UserAccount/Register";
 
 export default class App extends Component {
