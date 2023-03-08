@@ -1,32 +1,32 @@
 import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(
+      const response = await axios.get(
         "https://localhost:7217/api/userAccount/Login",
         {
-          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ email, password }),
+          params: { email, password },
         }
       );
 
-      if (response.ok) {
-        const user = await response.json();
+      if (response.status === 200) {
+        const user = response.data;
         Cookies.set("token", user.token, { expires: 1 });
-        history.push("/");
+        navigate("/");
       } else {
         setErrorMessage("Invalid email or password.");
       }

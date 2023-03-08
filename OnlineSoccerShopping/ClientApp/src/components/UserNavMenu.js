@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Collapse,
   Navbar,
+  Nav,
   NavbarBrand,
   NavbarToggler,
   NavItem,
@@ -9,9 +10,12 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
+import Cookies from "js-cookie";
+import Logout from "./Logout";
 
-const NavMenu = () => {
+const UserNavMenu = ({ setIsLoggedIn, handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);
+  const isLoggedIn = Cookies.get("token") !== undefined;
 
   const toggleNavbar = () => setCollapsed(!collapsed);
 
@@ -31,7 +35,7 @@ const NavMenu = () => {
           isOpen={!collapsed}
           navbar
         >
-          <ul className="navbar-nav flex-grow">
+          <Nav className="navbar-nav flex-grow">
             <NavItem>
               <NavLink tag={Link} className="text-dark" to="/">
                 Home
@@ -42,32 +46,29 @@ const NavMenu = () => {
                 Product List
               </NavLink>
             </NavItem>
-
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/Create">
-                Product
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/CategoryCreate">
-                Category
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/login">
-                Login
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/register">
-                Register
-              </NavLink>
-            </NavItem>
-          </ul>
+            {isLoggedIn ? (
+              <NavItem>
+                <Logout handleUserUpdate={handleUserUpdate} />
+              </NavItem>
+            ) : (
+              <>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/login">
+                    Login
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/register">
+                    Register
+                  </NavLink>
+                </NavItem>
+              </>
+            )}
+          </Nav>
         </Collapse>
       </Navbar>
     </header>
   );
 };
 
-export default NavMenu;
+export default UserNavMenu;
