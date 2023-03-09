@@ -4,7 +4,7 @@ import { Container, Row, Col, Form, FormCheck, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
-export default function Register() {
+export default function Register({ handleUserUpdate }) {
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -94,6 +94,7 @@ export default function Register() {
 
         // Redirect to the login page on success
         if (response.status === 200) {
+          handleUserUpdate();
           navigate("/login");
         }
       } catch (error) {
@@ -106,7 +107,7 @@ export default function Register() {
     <Container>
       <h1 className="text-center py-3">Register</h1>
       <Row className="justify-content-center">
-        <Col sm={12} md={6} lg={5} className="shadowed">
+        <Col sm={12} md={6} lg={5} className="p-5 shadowed">
           <p className="text-center">
             <strong>Already have an account?</strong>
             <Link to="/login" className="text-decoration-none">

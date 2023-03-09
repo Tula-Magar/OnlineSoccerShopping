@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Collapse,
   Navbar,
@@ -13,10 +13,16 @@ import "./NavMenu.css";
 import Cookies from "js-cookie";
 import Logout from "./Logout";
 
-const UserNavMenu = ({ setIsLoggedIn, handleUserUpdate }) => {
+const UserNavMenu = ({ handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);
-  const isLoggedIn = Cookies.get("token") !== undefined;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = Cookies.get("token");
+    setIsLoggedIn(!!token);
+  }, [Cookies.get("token")]);
+
+  console.log("isLoggedIn", isLoggedIn);
   const toggleNavbar = () => setCollapsed(!collapsed);
 
   return (

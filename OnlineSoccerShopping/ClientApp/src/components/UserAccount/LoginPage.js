@@ -2,8 +2,10 @@ import React, { useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
-function LoginPage() {
+function LoginPage({ handleUserUpdate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -26,6 +28,7 @@ function LoginPage() {
       if (response.status === 200) {
         const user = response.data;
         Cookies.set("token", user.token, { expires: 1 });
+        handleUserUpdate();
         navigate("/");
       } else {
         setErrorMessage("Invalid email or password.");
@@ -36,29 +39,56 @@ function LoginPage() {
   };
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </label>
-        <label>
-          Password:
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </label>
-        <button type="submit">Login</button>
-      </form>
-      {errorMessage && <p>{errorMessage}</p>}
-    </div>
+    <Container>
+      <h1 className="text-center py-3">Login</h1>
+      <Row className=" justify-content-center">
+        <Col sm={12} md={6} lg={5} className="p-5 shadowed">
+          <Form onSubmit={handleSubmit}>
+            <Form.Group>
+              <Form.Label>Email:</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mt-3">
+              <Form.Label>Password:</Form.Label>
+
+              <Form.Control
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+            <Button className="mt-3" type="submit">
+              Login
+            </Button>
+          </Form>
+          {errorMessage && <p>{errorMessage}</p>}
+
+          <p className="mt-3">
+            <strong>Don't have an account?</strong>
+            <Link to="/register" className="text-decoration-none">
+              {" "}
+              Register
+            </Link>
+          </p>
+
+          <p className="mt-3">
+            <strong>Forgot your password?</strong>
+            <Link to="/forgot-password" className="text-decoration-none">
+              {" "}
+              Reset Password
+            </Link>
+          </p>
+          <div>
+            ForgotPassword isn't implemented yet because I am thinking to use
+            either phone or email verification code
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

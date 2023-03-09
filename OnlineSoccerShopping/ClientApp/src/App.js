@@ -13,23 +13,30 @@ import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 import Login from "./components/UserAccount/LoginPage";
 import Register from "./components/UserAccount/Register";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await Cookies.get("token");
+      setIsLoggedIn(!!token);
+    };
+    getToken();
+  }, []);
+
   const handleUserUpdate = () => {
+    const token = Cookies.get("token");
+    setIsLoggedIn(!!token);
     try {
-      const user = Cookies.get("token")
-        ? JSON.parse(atob(Cookies.get("token").split(".")[1]))
-        : null;
+      const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
       setIsAdmin(user && user.role === "admin");
     } catch (error) {
       setIsAdmin(false);
-      setIsLoggedIn(false);
     }
   };
+
   return (
     <div>
       {isAdmin ? (
@@ -61,11 +68,11 @@ export default function App() {
         />
         <Route
           path="/login"
-          element={Cookies.get("token") ? <Navigate to="/" /> : <Login />}
+          element={<Login handleUserUpdate={handleUserUpdate} />}
         />
         <Route
           path="/register"
-          element={Cookies.get("token") ? <Navigate to="/" /> : <Register />}
+          element={<Register handleUserUpdate={handleUserUpdate} />}
         />
       </Routes>
     </div>

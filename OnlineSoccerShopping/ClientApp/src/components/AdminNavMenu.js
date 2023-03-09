@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {
   Collapse,
   Navbar,
+  Nav,
   NavbarBrand,
   NavbarToggler,
   NavItem,
@@ -32,7 +33,7 @@ const AdminNavMenu = ({ handleUserUpdate }) => {
           isOpen={!collapsed}
           navbar
         >
-          <ul className="navbar-nav flex-grow">
+          <Nav className="navbar-nav flex-grow">
             <NavItem>
               <NavLink tag={Link} className="text-dark" to="/">
                 Home
@@ -59,7 +60,7 @@ const AdminNavMenu = ({ handleUserUpdate }) => {
                 <Logout handleUserUpdate={handleUserUpdate} />
               </NavItem>
             </NavItem>
-          </ul>
+          </Nav>
         </Collapse>
       </Navbar>
     </header>

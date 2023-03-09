@@ -13,13 +13,13 @@ function Logout({ handleUserUpdate }) {
   };
 
   return (
-    <div>
+    <ul className="unstyled-list">
       <NavItem>
         <NavLink tag={Link} className="text-dark" to="/" onClick={handleLogout}>
           Logout
         </NavLink>
       </NavItem>
-    </div>
+    </ul>
   );
 }
 
