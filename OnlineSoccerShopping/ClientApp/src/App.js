@@ -16,6 +16,7 @@ import Cookies from "js-cookie";
 
 export default function App() {
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -29,6 +30,7 @@ export default function App() {
     try {
       const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
       setIsAdmin(user && user.role === "admin");
+      setUserName(user && user.Email);
     } catch (error) {
       setIsAdmin(false);
     }
@@ -52,7 +54,13 @@ export default function App() {
         <Route path="/products/:productId" element={<ProductDetails />} />
         <Route
           path="/products/:productId/edit"
-          element={isAdmin ? <ProductEdit /> : <Navigate to="/login" />}
+          element={
+            isAdmin ? (
+              <ProductEdit userEmail={userEmail} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
         <Route path="/products" element={<GetProduct isAdmin={isAdmin} />} />
         <Route

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.Eventing.Reader;
 
 namespace OnlineSoccerShopping.Models
 {
@@ -43,7 +44,7 @@ namespace OnlineSoccerShopping.Models
         public string ConfirmPassword { get; set; }
 
    
-
+        //public bool isAdmin { get; set; } = false;
         public bool dataProtection { get; set; }
 
         public virtual ICollection<Order> Orders { get; set; }
