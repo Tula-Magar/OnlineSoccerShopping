@@ -22,7 +22,6 @@ const UserNavMenu = ({ handleUserUpdate }) => {
     setIsLoggedIn(!!token);
   }, [Cookies.get("token")]);
 
-  console.log("isLoggedIn", isLoggedIn);
   const toggleNavbar = () => setCollapsed(!collapsed);
 
   return (

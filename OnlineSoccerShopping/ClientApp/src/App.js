@@ -19,11 +19,8 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const getToken = async () => {
-      const token = await Cookies.get("token");
-      setIsLoggedIn(!!token);
-    };
-    getToken();
+    const token = Cookies.get("token");
+    setIsLoggedIn(!!token);
   }, []);
 
   const handleUserUpdate = () => {
@@ -57,7 +54,7 @@ export default function App() {
           path="/products/:productId/edit"
           element={isAdmin ? <ProductEdit /> : <Navigate to="/login" />}
         />
-        <Route path="/products" element={<GetProduct />} />
+        <Route path="/products" element={<GetProduct isAdmin={isAdmin} />} />
         <Route
           path="/Create"
           element={isAdmin ? <Create /> : <Navigate to="/login" />}

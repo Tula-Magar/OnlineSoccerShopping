@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Row, Col, Card, Button, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-export default function GetProduct() {
+export default function GetProduct({ isAdmin }) {
   const [filter, setFilter] = useState("");
   const [product, setProduct] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -82,25 +82,29 @@ export default function GetProduct() {
                         Details
                       </Link>
 
-                      <Link
-                        className="btn btn-warning"
-                        to={`/products/${product.productId}/edit`}
-                        onClick={() =>
-                          console.log(`/products/${product.productId}/edit`)
-                        }
-                      >
-                        Edit
-                      </Link>
+                      {isAdmin && (
+                        <>
+                          <Link
+                            className="btn btn-warning"
+                            to={`/products/${product.productId}/edit`}
+                            onClick={() =>
+                              console.log(`/products/${product.productId}/edit`)
+                            }
+                          >
+                            Edit
+                          </Link>
 
-                      <Button
-                        variant="danger"
-                        onClick={() => {
-                          setSelectedProductId(product.productId);
-                          setShowDeleteModal(true);
-                        }}
-                      >
-                        Delete
-                      </Button>
+                          <Button
+                            variant="danger"
+                            onClick={() => {
+                              setSelectedProductId(product.productId);
+                              setShowDeleteModal(true);
+                            }}
+                          >
+                            Delete
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </div>
                 </Card.Body>
