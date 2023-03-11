@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
-import Logout from "./Logout";
+import Logout from "../components/UserAccount/Logout";
 
 const AdminNavMenu = ({ handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);

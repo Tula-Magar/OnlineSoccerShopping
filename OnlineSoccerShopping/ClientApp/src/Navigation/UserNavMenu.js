@@ -11,7 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
 import Cookies from "js-cookie";
-import Logout from "./Logout";
+import Logout from "../components/UserAccount/Logout";
 
 const UserNavMenu = ({ handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);
