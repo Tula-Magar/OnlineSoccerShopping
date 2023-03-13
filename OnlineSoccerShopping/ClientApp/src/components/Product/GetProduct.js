@@ -14,7 +14,6 @@ export default function GetProduct({ isAdmin }) {
       .get("https://localhost:7217/api/product")
       .then((res) => {
         setProduct(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.error(err);

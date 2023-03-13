@@ -30,7 +30,7 @@ export default function App() {
     try {
       const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
       setIsAdmin(user && user.role === "admin");
-      setUserName(user && user.Email);
+      setUserEmail(user && user.Email);
     } catch (error) {
       setIsAdmin(false);
     }
@@ -51,7 +51,12 @@ export default function App() {
       )}
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/products/:productId" element={<ProductDetails />} />
+        <Route
+          path="/products/:productId"
+          element={
+            <ProductDetails userEmail={userEmail} isLoggedIn={isLoggedIn} />
+          }
+        />
         <Route
           path="/products/:productId/edit"
           element={

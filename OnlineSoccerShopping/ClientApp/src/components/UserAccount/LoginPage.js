@@ -3,13 +3,17 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 
 function LoginPage({ handleUserUpdate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+
+  const location = useLocation();
+  const productId = new URLSearchParams(location.search).get("productId");
+  const { productIds } = useParams();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -29,7 +33,12 @@ function LoginPage({ handleUserUpdate }) {
         const user = response.data;
         Cookies.set("token", user.token, { expires: 1 });
         handleUserUpdate();
-        navigate("/");
+
+        if (productId) {
+          navigate(`/products/${productId}`);
+        } else {
+          navigate("/");
+        }
       } else {
         setErrorMessage("Invalid email or password.");
       }

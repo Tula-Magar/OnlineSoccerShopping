@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using Microsoft.EntityFrameworkCore;
+using OnlineSoccerShopping.Data;
+using OnlineSoccerShopping.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace OnlineSoccerShopping.Controllers
 {
@@ -8,36 +13,78 @@ namespace OnlineSoccerShopping.Controllers
     [ApiController]
     public class OrderController : ControllerBase
     {
-        // GET: api/<OrderController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly ApplicationDbContext _context;
+
+        public OrderController(ApplicationDbContext context)
         {
-            return new string[] { "value1", "value2" };
+            _context = context;
         }
 
-        // GET api/<OrderController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<OrderController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult<Order>> CreateOrder(Order order)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Associate the order with the user
+            order.User = await _context.Users.FindAsync(order.UserId);
+
+            // Calculate the order total by summing the prices of all order items
+            order.OrderTotal = order.OrderItems.Sum(item => item.Price * item.Quantity);
+
+
+            // Associate each order items with the orderItem
+
+            foreach(var item in order.OrderItems)
+{
+                var product = await _context.Products.FindAsync(item.ProductId);
+
+                if (product == null)
+                {
+                    return BadRequest($"Product {item.ProductId} not found.");
+                }
+
+                var orderItem = new OrderItem
+                {
+                    UserId = order.UserId,
+                    OrderId = order.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    Price = product.Price
+                };
+
+                // Set the OrderId property of the order item to the new order's OrderId
+                item.OrderId = order.OrderId;
+
+                order.OrderItems.Add(orderItem);
+            }
+
+
+            // Add the order and its associated order items to the database
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetOrder), new { id = order.OrderId }, order);
         }
 
-        // PUT api/<OrderController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
-        }
+            var order = await _context.Orders.FindAsync(id);
 
-        // DELETE api/<OrderController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            // Load the order items associated with the order
+            await _context.Entry(order)
+                .Collection(o => o.OrderItems)
+                .LoadAsync();
+
+            return order;
         }
     }
 }
