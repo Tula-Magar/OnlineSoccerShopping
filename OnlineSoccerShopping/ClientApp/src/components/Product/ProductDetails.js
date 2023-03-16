@@ -78,24 +78,21 @@ export default function ProductDetails({ userEmail, isLoggedIn }) {
         <Col md={4}>
           <Form.Label>Quantity:</Form.Label>
           <Col md={2}>
-            <Form.Select
-              onChange={handleQuantityChange}
-              defaultValue={quantity}
-            >
-              <option defaultValue="1">1</option>
-              <option defaultValue="2">2</option>
-              <option defaultValue="3">3</option>
-              <option defaultValue="4">4</option>
-              <option defaultValue="5">5</option>
+            <Form.Select onChange={handleQuantityChange} value={quantity}>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </Form.Select>
 
             <Form.Label>Size:</Form.Label>
-            <Form.Select onChange={handleSizeChange} defaultValue={size}>
-              <option defaultValue="sm">sm</option>
-              <option defaultValue="md">md</option>
-              <option defaultValue="lg">lg</option>
-              <option defaultValue="xl">xl</option>
-              <option defaultValue="xxl">xxl</option>
+            <Form.Select onChange={handleSizeChange} value={size}>
+              <option value="sm">sm</option>
+              <option value="md">md </option>
+              <option value="lg">lg</option>
+              <option value="xl">xl</option>
+              <option value="xxl">xxl</option>
             </Form.Select>
           </Col>
 
