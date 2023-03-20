@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Row, Col, Image, Button, Form } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 
-export default function ProductDetails({ userEmail, isLoggedIn }) {
+export default function ProductDetails({ user, isLoggedIn }) {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -29,16 +29,31 @@ export default function ProductDetails({ userEmail, isLoggedIn }) {
     setSize(event.target.value);
   };
 
-  const handleOrderClick = () => {
-    if (!isLoggedIn || !userEmail) {
+  console.log("user:", user);
+
+  const handleShoppingCartClick = () => {
+    if (!isLoggedIn || !user) {
       navigate(`/login?productId=${productId}`);
       return;
     }
 
-    if (isLoggedIn && !userEmail) {
+    if (isLoggedIn && user) {
+      axios.post("https://localhost:7217/api/shoppingcart", {
+        userId: user.id, // replace with actual user ID
+      });
+    }
+  };
+
+  const handleOrderClick = () => {
+    if (!isLoggedIn || user) {
+      navigate(`/login?productId=${productId}`);
+      return;
+    }
+
+    if (isLoggedIn && !user) {
       axios
         .post("https://localhost:7217/api/order", {
-          userId: userEmail, // replace with actual user ID
+          userId: user, // replace with actual user ID
           orderItems: [
             {
               productId: product.productId,

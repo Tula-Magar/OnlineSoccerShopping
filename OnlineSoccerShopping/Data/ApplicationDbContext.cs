@@ -20,6 +20,7 @@ namespace OnlineSoccerShopping.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<UserAccount> Users { get; set; }
+        public DbSet<ShoppingCart> ShoppingCarts { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

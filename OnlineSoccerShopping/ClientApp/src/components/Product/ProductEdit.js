@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import useProductCategories from "../ProductCategory/useProductCategories";
 
-const ProductEdit = ({ userName }) => {
+const ProductEdit = ({ user }) => {
   const [product, setProduct] = useState({
     name: "",
     description: "",
@@ -55,7 +55,7 @@ const ProductEdit = ({ userName }) => {
     formData.append("Description", data.Description);
     formData.append("Price", data.Price);
     formData.append("CategoryId", data.CategoryId);
-    // formData.append("UserEmail", userName); this is for server side validation to check user is admin or not
+    // formData.append("User", user); this is for server side validation to check user is admin or not
     if (product.imageUrlName) {
       formData.append("ImageUrl", product.imageUrlName);
     } else {

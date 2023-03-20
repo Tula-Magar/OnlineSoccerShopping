@@ -10,17 +10,17 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
-import Cookies from "js-cookie";
+import { useCookies } from "react-cookie";
 import Logout from "../components/UserAccount/Logout";
 
 const UserNavMenu = ({ handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cookies] = useCookies(["token"]);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    setIsLoggedIn(!!token);
-  }, [Cookies.get("token")]);
+    setIsLoggedIn(!!cookies.token);
+  }, [cookies]);
 
   const toggleNavbar = () => setCollapsed(!collapsed);
 

@@ -1,15 +1,17 @@
-import React, { useState } from "react";
-import Cookies from "js-cookie";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import axios from "axios";
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import { Link, useParams, useLocation } from "react-router-dom";
+import jwt_decode from "jwt-decode";
 
 function LoginPage({ handleUserUpdate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
+  const [cookies, setCookie] = useCookies(["token"]);
 
   const location = useLocation();
   const productId = new URLSearchParams(location.search).get("productId");
@@ -19,19 +21,28 @@ function LoginPage({ handleUserUpdate }) {
     event.preventDefault();
 
     try {
-      const response = await axios.get(
+      const response = await axios.post(
         "https://localhost:7217/api/userAccount/Login",
+        {
+          email,
+          password,
+        },
         {
           headers: {
             "Content-Type": "application/json",
           },
-          params: { email, password },
+
+          withCredentials: true,
         }
       );
 
       if (response.status === 200) {
-        const user = response.data;
-        Cookies.set("token", user.token, { expires: 1 });
+        const { token, user } = response.data;
+        setCookie("token", token, {
+          expires: new Date(Date.now() + 86400 * 1000),
+        });
+
+        const decodedToken = jwt_decode(token);
         handleUserUpdate();
 
         if (productId) {

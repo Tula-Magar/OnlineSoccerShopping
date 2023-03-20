@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
 import { Route, Routes, Navigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./custom.css";
@@ -12,30 +14,37 @@ import Create from "./components/Product/Create";
 import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 import Login from "./components/UserAccount/LoginPage";
 import Register from "./components/UserAccount/Register";
-import Cookies from "js-cookie";
 
 export default function App() {
+  const [cookies, setCookie] = useCookies(["token"]);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
+  const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    setIsLoggedIn(!!token);
-  }, []);
-
-  const handleUserUpdate = () => {
-    const token = Cookies.get("token");
+    const token = cookies.token;
     setIsLoggedIn(!!token);
     try {
-      const user = token ? JSON.parse(atob(token.split(".")[1])) : null;
-      setIsAdmin(user && user.role === "admin");
-      setUserEmail(user && user.Email);
+      const decodedToken = token ? jwt_decode(token) : null;
+      setIsAdmin(decodedToken && decodedToken.role === "admin");
+      setUser(decodedToken);
+    } catch (error) {
+      setIsAdmin(false);
+    }
+  }, [cookies]);
+
+  const handleUserUpdate = () => {
+    const token = cookies.token;
+    setIsLoggedIn(!!token);
+    try {
+      const decodedToken = token ? jwt_decode(token) : null;
+      setIsAdmin(decodedToken && decodedToken.role === "admin");
+      setUser(decodedToken);
     } catch (error) {
       setIsAdmin(false);
     }
   };
-
+  console.log("app", document.cookie);
   return (
     <div>
       {isAdmin ? (
@@ -53,18 +62,12 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/products/:productId"
-          element={
-            <ProductDetails userEmail={userEmail} isLoggedIn={isLoggedIn} />
-          }
+          element={<ProductDetails user={user} isLoggedIn={isLoggedIn} />}
         />
         <Route
           path="/products/:productId/edit"
           element={
-            isAdmin ? (
-              <ProductEdit userEmail={userEmail} />
-            ) : (
-              <Navigate to="/login" />
-            )
+            isAdmin ? <ProductEdit user={user} /> : <Navigate to="/login" />
           }
         />
         <Route path="/products" element={<GetProduct isAdmin={isAdmin} />} />
