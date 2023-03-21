@@ -31,8 +31,6 @@ function LoginPage({ handleUserUpdate }) {
           headers: {
             "Content-Type": "application/json",
           },
-
-          withCredentials: true,
         }
       );
 
@@ -42,7 +40,6 @@ function LoginPage({ handleUserUpdate }) {
           expires: new Date(Date.now() + 86400 * 1000),
         });
 
-        const decodedToken = jwt_decode(token);
         handleUserUpdate();
 
         if (productId) {

@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Container, Row, Col, Image, Button, Form } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import jwt_decode from "jwt-decode";
+import { CartUtils } from "../Cart/CartUtils";
 
 export default function ProductDetails({ user, isLoggedIn }) {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [size, setSize] = useState("sm");
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,19 +33,15 @@ export default function ProductDetails({ user, isLoggedIn }) {
     setSize(event.target.value);
   };
 
-  console.log("user:", user);
-
-  const handleShoppingCartClick = () => {
-    if (!isLoggedIn || !user) {
-      navigate(`/login?productId=${productId}`);
+  const handleShoppingCartClick = async () => {
+    if (!isLoggedIn || !user.nameid || !productId || !quantity || !size) {
+      console.log("Not all required information is available");
       return;
     }
 
-    if (isLoggedIn && user) {
-      axios.post("https://localhost:7217/api/shoppingcart", {
-        userId: user.id, // replace with actual user ID
-      });
-    }
+    const setShoppingCart = [+user.nameid, productId, quantity, size];
+    console.log(setShoppingCart);
+    await CartUtils(setShoppingCart);
   };
 
   const handleOrderClick = () => {
@@ -111,7 +111,11 @@ export default function ProductDetails({ user, isLoggedIn }) {
             </Form.Select>
           </Col>
 
-          <Button variant="primary" className="mt-3 mb-3">
+          <Button
+            variant="primary"
+            className="mt-3 mb-3"
+            onClick={handleShoppingCartClick}
+          >
             {/* add to cart button but not implemented yet */}
             Add to Cart
           </Button>

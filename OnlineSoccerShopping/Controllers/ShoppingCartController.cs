@@ -8,7 +8,7 @@ using OnlineSoccerShopping.Models;
 
 namespace OnlineSoccerShopping.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/shoppingcart")]
     [ApiController]
     public class ShoppingCartController : ControllerBase
     {
@@ -43,16 +43,27 @@ namespace OnlineSoccerShopping.Controllers
             return shoppingCart;
         }
 
+    
         // POST api/<ShoppingCartController>
         [HttpPost]
-
-        public async Task<ActionResult<ShoppingCart>> Post([FromBody] ShoppingCart shoppingCart)
+        public async Task<ActionResult<ShoppingCart>> Post(ShoppingCart shoppingCart)
         {
+            if (shoppingCart == null)
+            {
+                return NotFound();
+            }
+
+            if (!ModelState.IsValid) // Change this condition
+            {
+                return BadRequest(ModelState);
+            }
+
             _context.ShoppingCarts.Add(shoppingCart);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("Get", new { id = shoppingCart.Id }, shoppingCart);
         }
+
 
 
 
