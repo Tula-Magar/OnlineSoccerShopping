@@ -14,12 +14,15 @@ import Create from "./components/Product/Create";
 import CategoryCreate from "./components/ProductCategory/CategoryCreate";
 import Login from "./components/UserAccount/LoginPage";
 import Register from "./components/UserAccount/Register";
+import { useCart } from "./components/Cart/useCart";
+import GetShoppingCart from "./components/Cart/GetShoppingCart";
 
 export default function App() {
   const [cookies, setCookie] = useCookies(["token"]);
   const [isAdmin, setIsAdmin] = useState(false);
   const [user, setUser] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartItemCount, setCartItemCount] = useCart(user, isLoggedIn);
 
   useEffect(() => {
     const token = cookies.token;
@@ -44,7 +47,8 @@ export default function App() {
       setIsAdmin(false);
     }
   };
-  console.log("app", document.cookie);
+
+  console.log("cartItemCount", cartItemCount);
   return (
     <div>
       {isAdmin ? (
@@ -55,6 +59,7 @@ export default function App() {
       ) : (
         <UserNavMenu
           isLoggedIn={isLoggedIn}
+          cartItemCount={cartItemCount}
           handleUserUpdate={handleUserUpdate}
         />
       )}
@@ -62,7 +67,12 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/products/:productId"
-          element={<ProductDetails user={user} isLoggedIn={isLoggedIn} />}
+          element={
+            <ProductDetails
+              isLoggedIn={isLoggedIn}
+              setCartItemCount={setCartItemCount}
+            />
+          }
         />
         <Route
           path="/products/:productId/edit"
@@ -79,9 +89,18 @@ export default function App() {
           path="/CategoryCreate"
           element={isAdmin ? <CategoryCreate /> : <Navigate to="/login" />}
         />
+
+        <Route path="/cart" element={<GetShoppingCart user={user} />} />
+
         <Route
           path="/login"
-          element={<Login handleUserUpdate={handleUserUpdate} />}
+          element={
+            <Login
+              user={user}
+              isLoggedIn={isLoggedIn}
+              handleUserUpdate={handleUserUpdate}
+            />
+          }
         />
         <Route
           path="/register"

@@ -3,10 +3,9 @@ import axios from "axios";
 import { Container, Row, Col, Image, Button, Form } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import jwt_decode from "jwt-decode";
 import { CartUtils } from "../Cart/CartUtils";
 
-export default function ProductDetails({ user, isLoggedIn }) {
+export default function ProductDetails({ user, isLoggedIn, setCartItemCount }) {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -42,6 +41,10 @@ export default function ProductDetails({ user, isLoggedIn }) {
     const setShoppingCart = [+user.nameid, productId, quantity, size];
     console.log(setShoppingCart);
     await CartUtils(setShoppingCart);
+
+    if (setCartItemCount) {
+      setCartItemCount((prevCount) => prevCount + 1);
+    }
   };
 
   const handleOrderClick = () => {

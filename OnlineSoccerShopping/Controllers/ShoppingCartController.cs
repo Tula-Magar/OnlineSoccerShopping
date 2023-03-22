@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineSoccerShopping.Data;
 using OnlineSoccerShopping.Models;
-
+using System.Linq;
+using OnlineSoccerShopping.Azure;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,10 +15,12 @@ namespace OnlineSoccerShopping.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IAzureStorage _azureStorage;
 
-        public ShoppingCartController(ApplicationDbContext context)
+        public ShoppingCartController(ApplicationDbContext context, IAzureStorage azureStorage)
         {
             _context = context;
+            _azureStorage = azureStorage;
         }
 
         // GET: api/<ShoppingCartController>
@@ -30,20 +33,31 @@ namespace OnlineSoccerShopping.Controllers
 
         // GET api/<ShoppingCartController>/5
         [HttpGet("{id}")]
-
-        public async Task<ActionResult<ShoppingCart>> Get(int id)
+        public async Task<ActionResult<IEnumerable<ShoppingCart>>> Get(int id)
         {
-            var shoppingCart = await _context.ShoppingCarts.FindAsync(id);
+            var shoppingCartItems = await _context.ShoppingCarts
+                .Where(item => item.UserId == id)
+                .Include(c => c.Product)
+                .ToListAsync();
 
-            if (shoppingCart == null)
+            if (shoppingCartItems == null || !shoppingCartItems.Any())
             {
                 return NotFound();
             }
 
-            return shoppingCart;
+            foreach (var item in shoppingCartItems)
+            {
+                var imageData = await _azureStorage.GetImageAsync(item.Product.ImageUrlName);
+                item.Product.ImageUrlName = imageData;
+            }
+
+            return shoppingCartItems;
         }
 
-    
+
+
+ 
+
         // POST api/<ShoppingCartController>
         [HttpPost]
         public async Task<ActionResult<ShoppingCart>> Post(ShoppingCart shoppingCart)

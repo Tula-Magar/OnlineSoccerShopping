@@ -7,20 +7,21 @@ import {
   NavbarToggler,
   NavItem,
   NavLink,
+  Badge,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import "./NavMenu.css";
 import { useCookies } from "react-cookie";
 import Logout from "../components/UserAccount/Logout";
 
-const UserNavMenu = ({ handleUserUpdate }) => {
+const UserNavMenu = ({ cartItemCount, isLoggedIn, handleUserUpdate }) => {
   const [collapsed, setCollapsed] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cookies] = useCookies(["token"]);
 
-  useEffect(() => {
-    setIsLoggedIn(!!cookies.token);
-  }, [cookies]);
+  // useEffect(() => {
+  //   setIsLoggedIn(!!cookies.token);
+  // }, [cookies]);
 
   const toggleNavbar = () => setCollapsed(!collapsed);
 
@@ -49,6 +50,13 @@ const UserNavMenu = ({ handleUserUpdate }) => {
             <NavItem>
               <NavLink tag={Link} className="text-dark" to="/products">
                 Product List
+              </NavLink>
+            </NavItem>
+
+            <NavItem>
+              <NavLink tag={Link} className="text-dark" to="/cart">
+                Cart
+                <Badge color="secondary">{cartItemCount}</Badge>
               </NavLink>
             </NavItem>
             {isLoggedIn ? (
