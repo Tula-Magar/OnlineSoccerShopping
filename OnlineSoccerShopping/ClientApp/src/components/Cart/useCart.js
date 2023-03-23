@@ -6,11 +6,11 @@ export const useCart = (user, isLoggedIn) => {
 
   useEffect(() => {
     const updateCartItemCount = async () => {
-      if (isLoggedIn && user && user.nameid) {
+      if (user && user.nameid && !isLoggedIn && !isNaN(user.nameid)) {
         axios
-          .get(`https://localhost:7217/api/shoppingcart/${user.nameid}`)
+          .get(`https://localhost:7217/api/shoppingcart/${+user.nameid}`)
           .then((res) => {
-            if (res.data.$values.length === 0) {
+            if (res.status === 404) {
               setCartItemCount(0);
             } else {
               setCartItemCount(res.data.$values.length);

@@ -48,7 +48,6 @@ export default function App() {
     }
   };
 
-  console.log("cartItemCount", cartItemCount);
   return (
     <div>
       {isAdmin ? (
@@ -69,6 +68,7 @@ export default function App() {
           path="/products/:productId"
           element={
             <ProductDetails
+              user={user}
               isLoggedIn={isLoggedIn}
               setCartItemCount={setCartItemCount}
             />
@@ -90,7 +90,12 @@ export default function App() {
           element={isAdmin ? <CategoryCreate /> : <Navigate to="/login" />}
         />
 
-        <Route path="/cart" element={<GetShoppingCart user={user} />} />
+        <Route
+          path="/cart"
+          element={
+            <GetShoppingCart user={user} setCartItemCount={setCartItemCount} />
+          }
+        />
 
         <Route
           path="/login"

@@ -3,7 +3,7 @@ import axios from "axios";
 import { Container, Row, Col, Image, Button, Form } from "react-bootstrap";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { CartUtils } from "../Cart/CartUtils";
+import { AddCartUtils } from "../Cart/AddCartUtils";
 
 export default function ProductDetails({ user, isLoggedIn, setCartItemCount }) {
   const { productId } = useParams();
@@ -12,6 +12,8 @@ export default function ProductDetails({ user, isLoggedIn, setCartItemCount }) {
   const [size, setSize] = useState("sm");
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
   const navigate = useNavigate();
+
+  console.log("ProductDetails: user", user);
 
   useEffect(() => {
     axios
@@ -40,7 +42,7 @@ export default function ProductDetails({ user, isLoggedIn, setCartItemCount }) {
 
     const setShoppingCart = [+user.nameid, productId, quantity, size];
     console.log(setShoppingCart);
-    await CartUtils(setShoppingCart);
+    await AddCartUtils(setShoppingCart);
 
     if (setCartItemCount) {
       setCartItemCount((prevCount) => prevCount + 1);
