@@ -53,16 +53,18 @@ const UserNavMenu = ({ cartItemCount, isLoggedIn, handleUserUpdate }) => {
               </NavLink>
             </NavItem>
 
-            <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/cart">
-                Cart
-                <Badge color="secondary">{cartItemCount}</Badge>
-              </NavLink>
-            </NavItem>
             {isLoggedIn ? (
-              <NavItem>
-                <Logout handleUserUpdate={handleUserUpdate} />
-              </NavItem>
+              <>
+                <NavItem>
+                  <NavLink tag={Link} className="text-dark" to="/cart">
+                    Cart
+                    <Badge color="secondary">{cartItemCount}</Badge>
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <Logout handleUserUpdate={handleUserUpdate} />
+                </NavItem>
+              </>
             ) : (
               <>
                 <NavItem>

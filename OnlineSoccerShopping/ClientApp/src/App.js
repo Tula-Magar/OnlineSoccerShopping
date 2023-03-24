@@ -93,7 +93,14 @@ export default function App() {
         <Route
           path="/cart"
           element={
-            <GetShoppingCart user={user} setCartItemCount={setCartItemCount} />
+            isAdmin ? (
+              <GetShoppingCart
+                user={user}
+                setCartItemCount={setCartItemCount}
+              />
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
 
