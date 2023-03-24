@@ -16,13 +16,18 @@ function Logout({ handleUserUpdate }) {
   }, [cookies]);
 
   return (
-    <ul className="unstyled-list">
+    <>
       <NavItem>
-        <NavLink tag={Link} className="text-dark" to="/" onClick={handleLogout}>
+        <NavLink
+          tag={Link}
+          className="text-white"
+          to="/"
+          onClick={handleLogout}
+        >
           Logout
         </NavLink>
       </NavItem>
-    </ul>
+    </>
   );
 }
 

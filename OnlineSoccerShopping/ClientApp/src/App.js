@@ -4,6 +4,7 @@ import jwt_decode from "jwt-decode";
 import { Route, Routes, Navigate } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./custom.css";
+import Footer from "./components/Footer/Footer";
 import UserNavMenu from "./Navigation/UserNavMenu";
 import AdminNavMenu from "./Navigation/AdminNavMenu";
 import Home from "./components/Home";
@@ -49,7 +50,7 @@ export default function App() {
   };
 
   return (
-    <div>
+    <div className="App">
       {isAdmin ? (
         <AdminNavMenu
           isLoggedIn={isLoggedIn}
@@ -93,7 +94,7 @@ export default function App() {
         <Route
           path="/cart"
           element={
-            isAdmin ? (
+            isLoggedIn ? (
               <GetShoppingCart
                 user={user}
                 setCartItemCount={setCartItemCount}
@@ -119,6 +120,7 @@ export default function App() {
           element={<Register handleUserUpdate={handleUserUpdate} />}
         />
       </Routes>
+      <Footer />
     </div>
   );
 }

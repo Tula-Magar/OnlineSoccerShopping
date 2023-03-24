@@ -28,11 +28,11 @@ const UserNavMenu = ({ cartItemCount, isLoggedIn, handleUserUpdate }) => {
   return (
     <header>
       <Navbar
-        className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3 nav"
+        className="navbar-expand-sm navbar-toggleable-sm bg-dark mb-3 pt-3 pb-3 "
         container
         light
       >
-        <NavbarBrand tag={Link} to="/">
+        <NavbarBrand tag={Link} className="text-white" to="/">
           OnlineSoccerShopping
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} className="mr-2" />
@@ -41,14 +41,14 @@ const UserNavMenu = ({ cartItemCount, isLoggedIn, handleUserUpdate }) => {
           isOpen={!collapsed}
           navbar
         >
-          <Nav className="navbar-nav flex-grow">
+          <Nav className=" flex-grow">
             <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/">
+              <NavLink tag={Link} className="text-white" to="/">
                 Home
               </NavLink>
             </NavItem>
             <NavItem>
-              <NavLink tag={Link} className="text-dark" to="/products">
+              <NavLink tag={Link} className="text-white" to="/products">
                 Product List
               </NavLink>
             </NavItem>
@@ -56,24 +56,23 @@ const UserNavMenu = ({ cartItemCount, isLoggedIn, handleUserUpdate }) => {
             {isLoggedIn ? (
               <>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/cart">
+                  <NavLink tag={Link} className="text-white" to="/cart">
                     Cart
                     <Badge color="secondary">{cartItemCount}</Badge>
                   </NavLink>
                 </NavItem>
-                <NavItem>
-                  <Logout handleUserUpdate={handleUserUpdate} />
-                </NavItem>
+
+                <Logout handleUserUpdate={handleUserUpdate} />
               </>
             ) : (
               <>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/login">
+                  <NavLink tag={Link} className="text-white" to="/login">
                     Login
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink tag={Link} className="text-dark" to="/register">
+                  <NavLink tag={Link} className="text-white" to="/register">
                     Register
                   </NavLink>
                 </NavItem>

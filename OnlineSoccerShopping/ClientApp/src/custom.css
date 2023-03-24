@@ -1,4 +1,7 @@
 /* Provide sufficient contrast against white background */
+.App {
+  background: linear-gradient(to right, #30cfd0, rgba(77, 172, 254));
+}
 a {
   color: #0366d6;
 }
@@ -14,4 +17,21 @@ code {
 }
 .shadowed {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.homePage {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Path: src\components\UserAccount\Login */
+
+.loginPage {
+  height: 70vh;
+  margin-top: -20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

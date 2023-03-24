@@ -56,9 +56,9 @@ function LoginPage({ handleUserUpdate }) {
   };
 
   return (
-    <Container>
-      <h1 className="text-center py-3">Login</h1>
-      <Row className=" justify-content-center">
+    <Container className=" ">
+      <h1 className="text-center pt-3 mt-5">Login</h1>
+      <Row className="loginPage ">
         <Col sm={12} md={6} lg={5} className="p-5 shadowed">
           <Form onSubmit={handleSubmit}>
             <Form.Group>
